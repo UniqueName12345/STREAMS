@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>WebRTC Text Editor</title>
+  </head>
+  <body>
+    <textarea id="textArea" rows="10" cols="50"></textarea>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+      const socket = io();
+
+      // Get the textarea element
+      const textArea = document.getElementById('textArea');
+
+      // Send changes to the server
+      textArea.addEventListener('input', () => {
+        socket.emit('textChange', textArea.value);
+      });
+
+      // Receive initial text content from the server
+      socket.on('initialText', (initialText) => {
+        textArea.value = initialText;
+      });
+
+      // Receive text changes from other clients and update the textarea
+      socket.on('textChange', (newText) => {
+        textArea.value = newText;
+      });
+    </script>
+  </body>
+</html>
